@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-
-class SiirDepo with ChangeNotifier {
+class SiirDepo {
   late int _id;
   late String _siir_baslik;
   late String _siir_icerik;
@@ -14,12 +12,10 @@ class SiirDepo with ChangeNotifier {
 
   set siir_baslik(String baslik) {
     _siir_baslik = baslik;
-    notifyListeners();
   }
 
   set siir_icerik(String icerik) {
     _siir_icerik = icerik;
-    notifyListeners();
   }
 
   Map<String, dynamic> cevirMap() {

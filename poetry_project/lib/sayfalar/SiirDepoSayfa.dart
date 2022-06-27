@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:poetry_project/W%C4%B0dget/SiirYaz.dart';
+import 'package:poetry_project/Cubit/SiirDepoCubit.dart';
 import 'package:poetry_project/dataAccess/SiirDepoDao.dart';
 import 'package:poetry_project/sayfalar/SiirDepoDetay.dart';
+import '../Wİdget/SiirDepoDurum.dart';
+import '../Wİdget/SiirYaz.dart';
 import '../models/SiirDepo.dart';
 
 class SiirDepoSayfa extends StatefulWidget {
@@ -13,7 +16,7 @@ class SiirDepoSayfa extends StatefulWidget {
 }
 
 class _SiirDepoSayfaState extends State<SiirDepoSayfa> {
-  Future<List<SiirDepo>> yazdiginSiiriGoster() async {
+  /* Future<List<SiirDepo>> yazdiginSiiriGoster() async {
     var siirDepoList = await SiirDepoDao().tumSiirler();
     return siirDepoList;
   }
@@ -21,6 +24,12 @@ class _SiirDepoSayfaState extends State<SiirDepoSayfa> {
   Future<void> sil(int siir_id) async {
     await SiirDepoDao().siirSil(siir_id);
     setState(() {});
+  }*/
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<SiirDepoCubit>().SiirDepoAl();
   }
 
   @override
@@ -35,66 +44,70 @@ class _SiirDepoSayfaState extends State<SiirDepoSayfa> {
           style: GoogleFonts.novaSquare(fontSize: 20),
         ),
       ),
-      body: FutureBuilder<List<SiirDepo>>(
-          future: yazdiginSiiriGoster(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              var siirDepoList = snapshot.data;
-              return ListView.builder(
-                itemCount: siirDepoList!.length,
-                itemBuilder: (context, indeks) {
-                  var siirDepo = siirDepoList[indeks];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SiirDepoDetay()));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: SizedBox(
-                        width: 100,
-                        height: 70,
-                        child: Column(
-                          children: [
-                            Card(
-                              elevation: 8,
-                              shape: BeveledRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              color: Color.fromARGB(157, 252, 181, 246),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Text(
-                                    siirDepo.siir_baslik,
-                                    style: GoogleFonts.novaSquare(
-                                        fontWeight: FontWeight.bold),
+      body: BlocBuilder<SiirDepoCubit, SiirDepoDurum>(
+        builder: (context, siirDepoDurum) {
+          if (siirDepoDurum is SiirDepoYuklendi) {
+            var siirDepoList = siirDepoDurum.siirDepoListesi;
+
+            return ListView.builder(
+              itemCount: siirDepoList.length,
+              itemBuilder: (context, indeks) {
+                var siirDepo = siirDepoList[indeks];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SiirDepoDetay(
+                                  siirDepo: siirDepo,
+                                )));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: SizedBox(
+                      width: 100,
+                      height: 70,
+                      child: Column(
+                        children: [
+                          Card(
+                            elevation: 8,
+                            shape: BeveledRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            color: Color.fromARGB(157, 252, 181, 246),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Text(
+                                  siirDepo.siir_baslik,
+                                  style: GoogleFonts.novaSquare(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.black54,
                                   ),
-                                  IconButton(
-                                    icon: Icon(
-                                      Icons.delete,
-                                      color: Colors.black54,
-                                    ),
-                                    onPressed: () {
-                                      sil(siirDepo.id);
-                                    },
-                                  ),
-                                ],
-                              ),
+                                  onPressed: () {
+                                    context
+                                        .read<SiirDepoCubit>()
+                                        .SiirDepoSil(siirDepo.id);
+                                  },
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
-              );
-            } else {
-              return Center();
-            }
-          }),
+                  ),
+                );
+              },
+            );
+          } else {
+            return Center();
+          }
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           print("şiir yazıldı");

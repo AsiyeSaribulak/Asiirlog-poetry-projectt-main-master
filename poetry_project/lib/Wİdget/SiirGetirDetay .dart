@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:poetry_project/models/SiirGetirModel.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -77,56 +78,61 @@ icerik:element.children[3].text.toString(),
         title: Text('Şiir Göster'),
         backgroundColor: Colors.purple,
       ),
-      body: ListView.builder(
-          itemCount: siir.length,
-          itemBuilder: (BuildContext context, index) {
-            String videoId;
-            videoId = YoutubePlayer.convertUrlToId(siir[index].video)!;
+      body: isloading
+          ? Center(
+              child: Lottie.asset("assets/loading2.json"),
+            )
+          : ListView.builder(
+              itemCount: siir.length,
+              itemBuilder: (BuildContext context, index) {
+                String videoId;
+                videoId = YoutubePlayer.convertUrlToId(siir[index].video)!;
 
-            late YoutubePlayerController _controller = YoutubePlayerController(
-              initialVideoId: videoId,
-              flags: YoutubePlayerFlags(
-                autoPlay: false,
-                mute: false,
-              ),
-            );
-            return Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  YoutubePlayer(
-                    controller: _controller,
-                    liveUIColor: Colors.amber,
-                    showVideoProgressIndicator: true, //ilerleme çubuğu
+                late YoutubePlayerController _controller =
+                    YoutubePlayerController(
+                  initialVideoId: videoId,
+                  flags: YoutubePlayerFlags(
+                    autoPlay: false,
+                    mute: false,
                   ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    elevation: 6,
-                    child: Container(
-                      width: 500,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            siir[index].baslik,
-                            style: TextStyle(
-                                color: Colors.purple,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            siir[index].icerik,
-                            style: TextStyle(fontSize: 15),
-                          ),
-                        ],
+                );
+                return Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      YoutubePlayer(
+                        controller: _controller,
+                        liveUIColor: Colors.amber,
+                        showVideoProgressIndicator: true, //ilerleme çubuğu
                       ),
-                    ),
+                      Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        elevation: 6,
+                        child: Container(
+                          width: 500,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                siir[index].baslik,
+                                style: TextStyle(
+                                    color: Colors.purple,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                siir[index].icerik,
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            );
-          }),
+                );
+              }),
     );
   }
 }

@@ -1,8 +1,9 @@
+import 'dart:async';
 import 'package:poetry_project/models/SiirDepo.dart';
-
 import '../VeriTabaniYardimcisi/VeriTabaniYardimcisi.dart';
+import 'SiirDepoRepository.dart';
 
-class SiirDepoDao {
+class SiirDepoDao implements SiirDepoRepository {
   Future<List<SiirDepo>> tumSiirler() async {
     var db = await VeriTabaniYardimcisi.veritabaniErisim();
     List<Map<String, dynamic>> maps = await db.rawQuery("SELECT*FROM siirDepo");

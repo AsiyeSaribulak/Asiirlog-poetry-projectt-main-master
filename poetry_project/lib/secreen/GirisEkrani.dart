@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:poetry_project/W%C4%B0dget/SiirGiris.dart';
+
 import 'package:poetry_project/component/DrawerMenu.dart';
 import 'package:poetry_project/component/PageWiev.dart';
+import '../Wİdget/SiirGiris.dart';
 import '../dataAccess/SiirlerDao.dart';
 import '../models/Siir.dart';
 
@@ -34,15 +35,6 @@ class _GirisState extends State {
       ),
       drawer: Drawer(child: DrawerMenu()),
       body: SiirGiris(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print("müzik eklenecek");
-        },
-        tooltip: "müzik",
-        child: Icon(Icons.audiotrack),
-        backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.pinkAccent,
-      ),
     ));
   }
 }
