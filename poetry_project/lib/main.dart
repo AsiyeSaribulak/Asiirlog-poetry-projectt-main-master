@@ -9,6 +9,9 @@ import 'package:poetry_project/models/Siir.dart';
 import 'package:poetry_project/sayfalar/Anasayfa.dart';
 import 'package:provider/provider.dart';
 
+import 'Cubit/FavoriCubit.dart';
+import 'dataAccess/FavorilerDao.dart';
+
 void main() async {
   visualDensity:
   VisualDensity.adaptivePlatformDensity;
@@ -26,6 +29,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => SiirDepoCubit(SiirDepoDao())),
+        BlocProvider(create: (context) => FavoriCubit(FavorilerDao())),
       ],
       child: MultiProvider(
         providers: [

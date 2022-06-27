@@ -141,8 +141,8 @@ class _SiirDepoDetayState extends State<SiirDepoDetay> {
         hoverColor: Colors.blue,
         highlightElevation: 60,
         onPressed: () {
-          BlocProvider.of<SiirDepoCubit>(context)
-              .SiirDepoEkle(tfSiirBaslik.text, tfSiirIcerik.text);
+          BlocProvider.of<SiirDepoCubit>(context).SiirDepoGuncelle(
+              widget.siirDepo.id, tfSiirBaslik.text, tfSiirIcerik.text);
           Navigator.pop(context);
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => SiirDepoSayfa()));

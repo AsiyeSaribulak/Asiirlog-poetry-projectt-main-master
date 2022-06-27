@@ -20,12 +20,11 @@ class VeriTabaniYardimcisi {
     }
     Database database = await openDatabase(veritabaniYolu, version: 1,
         onCreate: (Database db, int version) async {
-      // When creating the db, create the table
+      await db.execute(
+          ''' CREATE TABLE favori (id INTEGER PRİMARY KEY AUTOINCREMENT,siir_id INTEGER NOT NULL,siir_baslik TEXT NOT NULL, siir_icerik TEXT NOT NULL, sair_ad Text NOT NULL,sair_slug TEXT,
+          FOREIGN KEY("siir_id") REFERENCES "siirler"("id") ON DELETE CASCADE ON UPDATE CASCADE) ''');
       await db.execute(
           'CREATE TABLE siirDepo (id INTEGER PRIMARY KEY, siir_baslik TEXT NOT NULL,siir_icerik TEXT NOT NULL)');
-      await db.execute(
-          ''' CREATE TABLE favori(id INTEGER NOT NULL PRİMARY KEY,AUTOINCREMENT,siir_id INTEGER FOREIGN KEY("siir_id")
-           REFERENCES siirler("id")ON DELETE CASCADE ON UPDATE CASCADE, begeni BOOL) ''');
     });
 
     return database;

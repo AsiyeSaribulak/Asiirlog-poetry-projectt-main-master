@@ -3,26 +3,34 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:poetry_project/VeriTabaniYardimcisi/VeriTabaniYardimcisi.dart';
+import 'package:poetry_project/dataAccess/FavorilerRepository.dart';
 import 'package:poetry_project/models/Favori.dart';
 
-class FavorilerDao {
+class FavorilerDao implements FavorilerRepository {
   Future<List<Favori>> tumFavoriler() async {
     var db = await VeriTabaniYardimcisi.veritabaniErisim();
-
-    List<Map<String, dynamic>> maps =
-        await db.rawQuery("SELECT *FROM favoriler");
+    List<Map<String, dynamic>> maps = await db.rawQuery("SELECT*FROM favori");
     return List.generate(maps.length, (i) {
       var satir = maps[i];
-      return Favori.withID(satir["id"], satir["siir_id"], satir["begeni"]);
+      return Favori.withID(satir["id"], satir["siir_id"], satir["siir_baslik"],
+          satir["siir_icerik"], satir["sair_ad"], satir["sair_slug"]);
     });
   }
 
-  Future<void> favoriEkleSql(int siir_id) async {
+  Future<void> favoriEkleSql(int siir_id, String siir_baslik,
+      String siir_icerik, String sair_ad, String sair_slug) async {
     var db = await VeriTabaniYardimcisi.veritabaniErisim();
-
-    var bilgiler = Map<String, dynamic>();
-    bilgiler["siir_id"] = siir_id;
-    await db.insert("favoriler", bilgiler);
+    if (db != null) {
+      var bilgiler = Map<String, dynamic>();
+      bilgiler["siir_id"] = siir_id;
+      bilgiler["baslik"] = siir_baslik;
+      bilgiler["icerik"] = siir_icerik;
+      bilgiler["sair_ad"] = sair_ad;
+      bilgiler["sair_slug"] = sair_slug;
+      await db.insert("favori", bilgiler);
+    } else {
+      print("veri tabanına eklenemedi");
+    }
   }
 
   Future<void> favoriSil(int siir_id) async {
